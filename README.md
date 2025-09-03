@@ -164,12 +164,40 @@
             display: none;
             opacity: 0;
         }
+        /* Estilos para el modal de mensaje */
+        .message-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        .message-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            transition: transform 0.3s ease-in-out;
+        }
+        .message-content h3 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">Generador de Recibos Ywen Tours</h1>
-        <form id="reciboForm" action="https://hook.us2.make.com/yiafilrgobtbilmys64wun75g5x0nwky" method="post">
+        <!-- Se ha eliminado el 'action' del formulario para manejar el envío con JS -->
+        <form id="reciboForm" method="post">
             <div class="radio-group">
                 <input type="radio" id="nuevo" name="opcion_formulario" value="nuevo" class="hidden">
                 <label for="nuevo">Nuevo recibo de pago</label>
@@ -338,12 +366,25 @@
                         </div>
                     </div>
                 </div>
+                <!-- Botón de envío -->
                 <button type="submit" class="button w-full mt-6">Enviar</button>
             </div>
         </form>
     </div>
 
+    <!-- Modal para mostrar mensajes -->
+    <div id="messageModal" class="message-modal">
+        <div class="message-content">
+            <h3 id="messageTitle"></h3>
+            <p id="messageText"></p>
+            <button onclick="document.getElementById('messageModal').style.display = 'none'" class="button mt-4">Aceptar</button>
+        </div>
+    </div>
+
     <script>
+        // Aquí va tu URL de Make.com
+        const WEBHOOK_URL = "https://hook.us2.make.com/yiafilrgobtbilmys64wun75g5x0nwky";
+
         const nuevoReciboRadio = document.getElementById('nuevo');
         const actualizacionRadio = document.getElementById('actualizacion');
         const nuevoReciboSection = document.getElementById('nuevoReciboSection');
@@ -359,10 +400,18 @@
         const tarifaMenor = document.getElementById('tarifaMenor');
         const conceptoAdicional = document.getElementById('Concepto_Adicional');
         const montoAdicional = document.getElementById('Monto_Adicional');
-        const numeroReciboAct = document.getElementById('Numero_Recibo_Actualizacion');
-        const fechaPagoAct = document.getElementById('Fecha_Pago_Actualizacion');
-        const montoPagoAct = document.getElementById('Monto_Pago_Actualizacion');
+        const messageModal = document.getElementById('messageModal');
+        const messageTitle = document.getElementById('messageTitle');
+        const messageText = document.getElementById('messageText');
         
+        // Función para mostrar el modal de mensaje
+        function showMessage(title, message, isSuccess = true) {
+            messageTitle.textContent = title;
+            messageText.textContent = message;
+            messageTitle.style.color = isSuccess ? '#16a34a' : '#dc2626';
+            messageModal.style.display = 'flex';
+        }
+
         // Function to toggle between sections
         function toggleSections() {
             formContent.classList.remove('initial-hidden');
@@ -417,6 +466,62 @@
 
         cantidadAdultos.addEventListener('change', toggleTarifaFields);
         cantidadMenores.addEventListener('change', toggleTarifaFields);
+
+        // Agregamos el event listener para el envío del formulario
+        document.getElementById('reciboForm').addEventListener('submit', async function(event) {
+            // Evita que el formulario se envíe de forma tradicional y recargue la página
+            event.preventDefault();
+
+            // Deshabilita el botón para evitar envíos duplicados
+            const submitButton = event.target.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Enviando...';
+            submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+
+            // Recopila los datos del formulario de forma dinámica
+            const formData = new FormData(event.target);
+            const data = {};
+            for (let [key, value] of formData.entries()) {
+                // Solo incluye los campos que son visibles para el formulario activo
+                const inputElement = event.target.querySelector(`[name="${key}"]`);
+                if (inputElement && inputElement.offsetParent !== null) {
+                    data[key] = value;
+                }
+            }
+
+            try {
+                // Envía los datos al webhook de Make.com
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error en el servidor: ${response.status}`);
+                }
+
+                // Espera la respuesta del servidor
+                const result = await response.json();
+                console.log('Éxito:', result);
+
+                // Muestra el mensaje de éxito
+                showMessage('¡Recibo Enviado!', 'El formulario se ha enviado correctamente a Make.com.', true);
+                event.target.reset(); // Reinicia el formulario
+
+            } catch (error) {
+                console.error('Error:', error);
+                // Muestra un mensaje de error
+                showMessage('Error de Envío', 'Ocurrió un error al enviar el formulario. Por favor, inténtalo de nuevo.', false);
+            } finally {
+                // Habilita el botón de nuevo
+                submitButton.disabled = false;
+                submitButton.textContent = 'Enviar';
+                submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        });
 
         window.onload = function() {
             toggleSections();
