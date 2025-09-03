@@ -15,11 +15,12 @@
         }
         .container {
             max-width: 800px;
-            margin: 1.5rem auto; /* Ajustado para móviles */
-            padding: 1.5rem; /* Ajustado para móviles */
+            margin: 1.5rem auto;
+            padding: 1.5rem;
             background-color: #fff;
             border-radius: 12px;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease-in-out;
         }
         @media (min-width: 768px) {
             .container {
@@ -29,9 +30,12 @@
         }
         .form-section {
             display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
         }
         .form-section.active {
             display: block;
+            opacity: 1;
         }
         .form-field {
             margin-bottom: 1.25rem;
@@ -41,7 +45,7 @@
             font-weight: 600;
             margin-bottom: 0.5rem;
             color: #4b5563;
-            font-size: 0.95rem; /* Asegurar legibilidad en móviles */
+            font-size: 0.95rem;
         }
         input[type="text"], select, input[type="date"], textarea {
             width: 100%;
@@ -95,7 +99,7 @@
         }
         .radio-group {
             display: flex;
-            flex-wrap: wrap; /* Permitir que los elementos se envuelvan */
+            flex-wrap: wrap;
             gap: 1rem;
             margin-bottom: 1.5rem;
         }
@@ -108,7 +112,7 @@
             transition: all 0.2s ease-in-out;
             border: 1px solid #c7d2fe;
             font-weight: 500;
-            flex-grow: 1; /* Para que ocupen el espacio disponible */
+            flex-grow: 1;
             text-align: center;
         }
         .radio-group input:checked + label {
@@ -156,6 +160,10 @@
             font-weight: 700;
             color: #1f2937;
         }
+        .initial-hidden {
+            display: none;
+            opacity: 0;
+        }
     </style>
 </head>
 <body>
@@ -163,174 +171,175 @@
         <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">Generador de Recibos Ywen Tours</h1>
         <form id="reciboForm" action="https://hook.us2.make.com/yiafilrgobtbilmys64wun75g5x0nwky" method="post">
             <div class="radio-group">
-                <input type="radio" id="nuevo" name="opcion_formulario" value="nuevo" class="hidden" checked>
+                <input type="radio" id="nuevo" name="opcion_formulario" value="nuevo" class="hidden">
                 <label for="nuevo">Nuevo recibo de pago</label>
 
                 <input type="radio" id="actualizacion" name="opcion_formulario" value="actualizacion" class="hidden">
                 <label for="actualizacion">Actualización de pago</label>
             </div>
 
-            <!-- Sección de campos para Nuevo Recibo -->
-            <div id="nuevoReciboSection" class="form-section active">
-                <h2 class="section-title">Datos del Cliente</h2>
-                <div class="grid-2">
-                    <div class="form-field">
-                        <label for="Nombre_Cliente">Nombre del Cliente</label>
-                        <input type="text" id="Nombre_Cliente" name="Nombre_Cliente" required>
-                    </div>
-                    <div class="form-field">
-                        <label for="Numero_Telefono_Cliente">Número de teléfono del cliente</label>
-                        <input type="text" id="Numero_Telefono_Cliente" name="Numero_Telefono_Cliente" required>
-                    </div>
-                </div>
-
-                <h2 class="section-title">Detalles del Viaje</h2>
-                <div class="grid-2">
-                    <div class="form-field">
-                        <label for="Destino_Viaje">Destino del Viaje</label>
-                        <input type="text" id="Destino_Viaje" name="Destino_Viaje" required>
-                    </div>
-                    <div class="form-field">
-                        <label for="Tipo_Viaje">Tipo de viaje</label>
-                        <select id="Tipo_Viaje" name="Tipo_Viaje">
-                            <option value="Terrestre">Terrestre</option>
-                            <option value="Aéreo">Aéreo</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-field">
-                    <label for="Concepto_Viaje">Concepto del Viaje</label>
-                    <textarea id="Concepto_Viaje" name="Concepto_Viaje" rows="3" required></textarea>
-                </div>
-
-                <div class="grid-2">
-                    <div class="form-field">
-                        <label for="Tipo_Habitacion">Tipo de habitación</label>
-                        <select id="Tipo_Habitacion" name="Tipo_Habitacion">
-                            <option value="N/A">N/A</option>
-                            <option value="Cuádruple">Cuádruple</option>
-                            <option value="Triple">Triple</option>
-                            <option value="Doble">Doble</option>
-                            <option value="Privada">Privada</option>
-                        </select>
-                    </div>
-                    <div class="form-field">
-                        <label for="Punto_Encuentro">Punto de encuentro</label>
-                        <select id="Punto_Encuentro" name="Punto_Encuentro">
-                            <option value="Paloma de la Paz">Paloma de La Paz (Morelos)</option>
-                            <option value="Toks Jacarandas">Toks Jacarandas (Morelos)</option>
-                            <option value="Mega de Tejalpa">Mega de Tejalpa (Morelos)</option>
-                            <option value="Crucero de Atlihuayan">Crucero de Atlihuayan (Morelos)</option>
-                            <option value="Mega los Arcos">Mega los Arcos (Morelos)</option>
-                            <option value="Plaza Perisur">Plaza Perisur (CDMX)</option>
-                            <option value="Plaza Satélite">Plaza Satélite (CDMX)</option>
-                            <option value="Otro">Otro</option>
-                        </select>
-                    </div>
-                </div>
-                <div id="otroPuntoField" class="form-field" style="display:none;">
-                    <label for="Otro_Punto">Ingresar otro punto</label>
-                    <input type="text" id="Otro_Punto" name="Otro_Punto">
-                </div>
-
-                <h2 class="section-title">Conceptos y Pagos</h2>
-                <div class="grid-2">
-                    <div class="form-field">
-                        <label for="Cantidad_Adultos">Adultos</label>
-                        <select id="Cantidad_Adultos" name="Cantidad_Adultos">
-                            <option value="0">0</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                        </select>
-                    </div>
-                    <div class="form-field">
-                        <label for="Cantidad_Menores">Menores</label>
-                        <select id="Cantidad_Menores" name="Cantidad_Menores">
-                            <option value="0">0</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="grid-2">
-                    <div id="tarifaAdulto" class="form-field hidden">
-                        <label for="Tarifa_Adultos">Tarifa de Adultos</label>
-                        <div class="currency-input-wrapper">
-                            <input type="number" id="Tarifa_Adultos" name="Tarifa_Adultos">
-                        </div>
-                    </div>
-                    <div id="tarifaMenor" class="form-field hidden">
-                        <label for="Tarifa_Menores">Tarifa de Menores</label>
-                        <div class="currency-input-wrapper">
-                            <input type="number" id="Tarifa_Menores" name="Tarifa_Menores">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-field">
-                    <label for="Pago_Realizado_Nuevo">Monto del Primer Pago</label>
-                    <div class="currency-input-wrapper">
-                        <input type="number" id="Pago_Realizado_Nuevo" name="Pago_Realizado_Nuevo" required>
-                    </div>
-                </div>
-                <div class="form-field">
-                    <label for="Fecha_Primer_Pago">Fecha del Primer Pago</label>
-                    <input type="date" id="Fecha_Primer_Pago" name="Fecha_Primer_Pago" required>
-                </div>
-
-                <div class="form-field flex items-center gap-2">
-                    <input type="checkbox" id="Tarifa_Adicional_Checkbox" name="Tarifa_Adicional_Checkbox">
-                    <label for="Tarifa_Adicional_Checkbox" class="mb-0 font-normal">Añadir tarifa adicional</label>
-                </div>
-                <div id="tarifaAdicional" class="form-field hidden">
+            <div id="formContent" class="initial-hidden">
+                <!-- Sección de campos para Nuevo Recibo -->
+                <div id="nuevoReciboSection" class="form-section">
+                    <h2 class="section-title">Datos del Cliente</h2>
                     <div class="grid-2">
-                        <div>
-                            <label for="Concepto_Adicional">Concepto Adicional</label>
-                            <input type="text" id="Concepto_Adicional" name="Concepto_Adicional">
+                        <div class="form-field">
+                            <label for="Nombre_Cliente">Nombre del Cliente</label>
+                            <input type="text" id="Nombre_Cliente" name="Nombre_Cliente" required>
                         </div>
-                        <div>
-                            <label for="Monto_Adicional">Monto Adicional</label>
+                        <div class="form-field">
+                            <label for="Numero_Telefono_Cliente">Número de teléfono del cliente</label>
+                            <input type="text" id="Numero_Telefono_Cliente" name="Numero_Telefono_Cliente" required>
+                        </div>
+                    </div>
+
+                    <h2 class="section-title">Detalles del Viaje</h2>
+                    <div class="grid-2">
+                        <div class="form-field">
+                            <label for="Destino_Viaje">Destino del Viaje</label>
+                            <input type="text" id="Destino_Viaje" name="Destino_Viaje" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="Tipo_Viaje">Tipo de viaje</label>
+                            <select id="Tipo_Viaje" name="Tipo_Viaje">
+                                <option value="Terrestre">Terrestre</option>
+                                <option value="Aéreo">Aéreo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <label for="Concepto_Viaje">Concepto del Viaje</label>
+                        <textarea id="Concepto_Viaje" name="Concepto_Viaje" rows="3" required></textarea>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="form-field">
+                            <label for="Tipo_Habitacion">Tipo de habitación</label>
+                            <select id="Tipo_Habitacion" name="Tipo_Habitacion">
+                                <option value="N/A">N/A</option>
+                                <option value="Cuádruple">Cuádruple</option>
+                                <option value="Triple">Triple</option>
+                                <option value="Doble">Doble</option>
+                                <option value="Privada">Privada</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label for="Punto_Encuentro">Punto de encuentro</label>
+                            <select id="Punto_Encuentro" name="Punto_Encuentro">
+                                <option value="Paloma de la Paz">Paloma de La Paz (Morelos)</option>
+                                <option value="Toks Jacarandas">Toks Jacarandas (Morelos)</option>
+                                <option value="Mega de Tejalpa">Mega de Tejalpa (Morelos)</option>
+                                <option value="Crucero de Atlihuayan">Crucero de Atlihuayan (Morelos)</option>
+                                <option value="Mega los Arcos">Mega los Arcos (Morelos)</option>
+                                <option value="Plaza Perisur">Plaza Perisur (CDMX)</option>
+                                <option value="Plaza Satélite">Plaza Satélite (CDMX)</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="otroPuntoField" class="form-field" style="display:none;">
+                        <label for="Otro_Punto">Ingresar otro punto</label>
+                        <input type="text" id="Otro_Punto" name="Otro_Punto">
+                    </div>
+
+                    <h2 class="section-title">Conceptos y Pagos</h2>
+                    <div class="grid-2">
+                        <div class="form-field">
+                            <label for="Cantidad_Adultos">Adultos</label>
+                            <select id="Cantidad_Adultos" name="Cantidad_Adultos">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label for="Cantidad_Menores">Menores</label>
+                            <select id="Cantidad_Menores" name="Cantidad_Menores">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div id="tarifaAdulto" class="form-field hidden">
+                            <label for="Tarifa_Adultos">Tarifa de Adultos</label>
                             <div class="currency-input-wrapper">
-                                <input type="number" id="Monto_Adicional" name="Monto_Adicional">
+                                <input type="number" id="Tarifa_Adultos" name="Tarifa_Adultos">
+                            </div>
+                        </div>
+                        <div id="tarifaMenor" class="form-field hidden">
+                            <label for="Tarifa_Menores">Tarifa de Menores</label>
+                            <div class="currency-input-wrapper">
+                                <input type="number" id="Tarifa_Menores" name="Tarifa_Menores">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="Pago_Realizado_Nuevo">Monto del Primer Pago</label>
+                        <div class="currency-input-wrapper">
+                            <input type="number" id="Pago_Realizado_Nuevo" name="Pago_Realizado_Nuevo" required>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <label for="Fecha_Primer_Pago">Fecha del Primer Pago</label>
+                        <input type="date" id="Fecha_Primer_Pago" name="Fecha_Primer_Pago" required>
+                    </div>
+
+                    <div class="form-field flex items-center gap-2">
+                        <input type="checkbox" id="Tarifa_Adicional_Checkbox" name="Tarifa_Adicional_Checkbox">
+                        <label for="Tarifa_Adicional_Checkbox" class="mb-0 font-normal">Añadir tarifa adicional</label>
+                    </div>
+                    <div id="tarifaAdicional" class="form-field hidden">
+                        <div class="grid-2">
+                            <div>
+                                <label for="Concepto_Adicional">Concepto Adicional</label>
+                                <input type="text" id="Concepto_Adicional" name="Concepto_Adicional">
+                            </div>
+                            <div>
+                                <label for="Monto_Adicional">Monto Adicional</label>
+                                <div class="currency-input-wrapper">
+                                    <input type="number" id="Monto_Adicional" name="Monto_Adicional">
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Sección de campos para Actualización de Pago -->
-            <div id="actualizacionPagoSection" class="form-section">
-                <h2 class="section-title">Actualizar Pago</h2>
-                <div class="form-field">
-                    <label for="Numero_Recibo_Actualizacion">Número de Recibo</label>
-                    <input type="text" id="Numero_Recibo_Actualizacion" name="Numero_Recibo_Actualizacion" required>
-                </div>
-                <div class="form-field">
-                    <label for="Fecha_Pago_Actualizacion">Fecha del Nuevo Pago</label>
-                    <input type="date" id="Fecha_Pago_Actualizacion" name="Fecha_Pago_Actualizacion" required>
-                </div>
-                <div class="form-field">
-                    <label for="Monto_Pago_Actualizacion">Monto del Nuevo Pago</label>
-                    <div class="currency-input-wrapper">
-                        <input type="number" id="Monto_Pago_Actualizacion" name="Monto_Pago_Actualizacion" required>
+                <!-- Sección de campos para Actualización de Pago -->
+                <div id="actualizacionPagoSection" class="form-section">
+                    <h2 class="section-title">Actualizar Pago</h2>
+                    <div class="form-field">
+                        <label for="Numero_Recibo_Actualizacion">Número de Recibo</label>
+                        <input type="text" id="Numero_Recibo_Actualizacion" name="Numero_Recibo_Actualizacion" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="Fecha_Pago_Actualizacion">Fecha del Nuevo Pago</label>
+                        <input type="date" id="Fecha_Pago_Actualizacion" name="Fecha_Pago_Actualizacion" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="Monto_Pago_Actualizacion">Monto del Nuevo Pago</label>
+                        <div class="currency-input-wrapper">
+                            <input type="number" id="Monto_Pago_Actualizacion" name="Monto_Pago_Actualizacion" required>
+                        </div>
                     </div>
                 </div>
+                <button type="submit" class="button w-full mt-6">Enviar</button>
             </div>
-
-            <button type="submit" class="button w-full mt-6">Enviar</button>
         </form>
     </div>
 
@@ -339,6 +348,7 @@
         const actualizacionRadio = document.getElementById('actualizacion');
         const nuevoReciboSection = document.getElementById('nuevoReciboSection');
         const actualizacionPagoSection = document.getElementById('actualizacionPagoSection');
+        const formContent = document.getElementById('formContent');
         const tarifasAdicionales = document.getElementById('tarifaAdicional');
         const tarifasAdicionalesCheckbox = document.getElementById('Tarifa_Adicional_Checkbox');
         const puntoEncuentroSelect = document.getElementById('Punto_Encuentro');
@@ -354,6 +364,7 @@
         const montoPagoAct = document.getElementById('Monto_Pago_Actualizacion');
 
         function toggleSections() {
+            formContent.classList.remove('initial-hidden');
             if (nuevoReciboRadio.checked) {
                 nuevoReciboSection.classList.add('active');
                 actualizacionPagoSection.classList.remove('active');
@@ -404,11 +415,6 @@
 
         cantidadAdultos.addEventListener('change', toggleTarifaFields);
         cantidadMenores.addEventListener('change', toggleTarifaFields);
-
-        window.onload = function() {
-            toggleSections();
-            toggleTarifaFields(); // Cargar campos de tarifa al inicio si ya tienen un valor
-        }
     </script>
 </body>
 </html>
