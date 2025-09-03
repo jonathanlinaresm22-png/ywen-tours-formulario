@@ -6,19 +6,26 @@
     <title>Generador de Recibos Ywen Tours</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
+            background-color: #f7f9fc;
             color: #333;
             line-height: 1.6;
         }
         .container {
             max-width: 800px;
-            margin: 2rem auto;
-            padding: 2rem;
+            margin: 1.5rem auto; /* Ajustado para móviles */
+            padding: 1.5rem; /* Ajustado para móviles */
             background-color: #fff;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        }
+        @media (min-width: 768px) {
+            .container {
+                margin: 2rem auto;
+                padding: 2rem;
+            }
         }
         .form-section {
             display: none;
@@ -27,33 +34,34 @@
             display: block;
         }
         .form-field {
-            margin-bottom: 1rem;
+            margin-bottom: 1.25rem;
         }
         label {
             display: block;
             font-weight: 600;
             margin-bottom: 0.5rem;
             color: #4b5563;
+            font-size: 0.95rem; /* Asegurar legibilidad en móviles */
         }
-        /* Estilos generales para inputs de texto y selects */
-        input[type="text"], select, input[type="date"] {
+        input[type="text"], select, input[type="date"], textarea {
             width: 100%;
             padding: 0.75rem;
-            border: 1px solid #d1d5db;
+            border: 1px solid #e5e7eb;
             border-radius: 8px;
             font-size: 1rem;
             transition: all 0.2s ease-in-out;
+            background-color: #f9fafb;
         }
-        /* Estilos específicos para inputs de tipo number sin borde */
         input[type="number"] {
-            -webkit-appearance: textfield; /* Safari y Chrome */
-            -moz-appearance: textfield;   /* Firefox */
+            -webkit-appearance: textfield;
+            -moz-appearance: textfield;
             appearance: textfield;
             width: 100%;
             font-size: 1rem;
             border: none;
             outline: none;
             padding: 0;
+            background-color: transparent;
         }
         input[type="number"]::-webkit-inner-spin-button,
         input[type="number"]::-webkit-outer-spin-button {
@@ -62,70 +70,97 @@
         }
         input[type="text"]:focus, input[type="number"]:focus, select:focus, input[type="date"]:focus, textarea:focus {
             border-color: #3b82f6;
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
             outline: none;
+            background-color: #fff;
         }
         .button {
             display: inline-block;
             padding: 0.75rem 1.5rem;
-            background-color: #3b82f6;
+            background-color: #2563eb;
             color: #fff;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.2s ease-in-out;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
             font-weight: 600;
+            letter-spacing: 0.05em;
         }
         .button:hover {
-            background-color: #2563eb;
+            background-color: #1d4ed8;
+            transform: translateY(-2px);
+        }
+        .button:active {
+            transform: translateY(0);
         }
         .radio-group {
             display: flex;
+            flex-wrap: wrap; /* Permitir que los elementos se envuelvan */
             gap: 1rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
         .radio-group label {
-            background-color: #e5e7eb;
+            background-color: #eef2ff;
+            color: #4338ca;
             padding: 0.75rem 1.5rem;
             border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.2s ease-in-out;
+            transition: all 0.2s ease-in-out;
+            border: 1px solid #c7d2fe;
+            font-weight: 500;
+            flex-grow: 1; /* Para que ocupen el espacio disponible */
+            text-align: center;
         }
         .radio-group input:checked + label {
             background-color: #3b82f6;
             color: #fff;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+            border-color: #3b82f6;
         }
         .grid-2 {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
         }
-
-        /* Nuevos estilos para el campo de moneda */
+        @media (min-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
         .currency-input-wrapper {
             display: flex;
             align-items: center;
-            border: 1px solid #d1d5db;
+            border: 1px solid #e5e7eb;
             border-radius: 8px;
             padding: 0.75rem;
-            background-color: #fff;
+            background-color: #f9fafb;
             transition: all 0.2s ease-in-out;
         }
         .currency-input-wrapper:focus-within {
             border-color: #3b82f6;
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
             outline: none;
+            background-color: #fff;
         }
         .currency-input-wrapper::before {
             content: '$';
             margin-right: 0.5rem;
             color: #6b7280;
+            font-weight: 500;
+        }
+        .section-title {
+            position: relative;
+            margin-top: 2rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="text-3xl font-bold text-center mb-6">Generador de Recibos Ywen Tours</h1>
+        <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">Generador de Recibos Ywen Tours</h1>
         <form id="reciboForm" action="https://hook.us2.make.com/yiafilrgobtbilmys64wun75g5x0nwky" method="post">
             <div class="radio-group">
                 <input type="radio" id="nuevo" name="opcion_formulario" value="nuevo" class="hidden" checked>
@@ -137,27 +172,24 @@
 
             <!-- Sección de campos para Nuevo Recibo -->
             <div id="nuevoReciboSection" class="form-section active">
-                <h2 class="text-2xl font-semibold mb-4">Datos del Cliente</h2>
-                <div class="form-field">
-                    <label for="Nombre_Cliente">Nombre del Cliente</label>
-                    <input type="text" id="Nombre_Cliente" name="Nombre_Cliente" required>
-                </div>
-                <div class="form-field">
-                    <label for="Numero_Telefono_Cliente">Número de teléfono del cliente</label>
-                    <input type="text" id="Numero_Telefono_Cliente" name="Numero_Telefono_Cliente" required>
-                </div>
-
-                <h2 class="text-2xl font-semibold mt-6 mb-4">Detalles del Viaje</h2>
-                 <div class="form-field">
-                    <label for="Destino_Viaje">Destino del Viaje</label>
-                    <input type="text" id="Destino_Viaje" name="Destino_Viaje" required>
-                </div>
-                <div class="form-field">
-                    <label for="Concepto_Viaje">Concepto del Viaje</label>
-                    <textarea id="Concepto_Viaje" name="Concepto_Viaje" class="w-full p-2 border border-gray-300 rounded-md" rows="3" required></textarea>
-                </div>
-
+                <h2 class="section-title">Datos del Cliente</h2>
                 <div class="grid-2">
+                    <div class="form-field">
+                        <label for="Nombre_Cliente">Nombre del Cliente</label>
+                        <input type="text" id="Nombre_Cliente" name="Nombre_Cliente" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="Numero_Telefono_Cliente">Número de teléfono del cliente</label>
+                        <input type="text" id="Numero_Telefono_Cliente" name="Numero_Telefono_Cliente" required>
+                    </div>
+                </div>
+
+                <h2 class="section-title">Detalles del Viaje</h2>
+                <div class="grid-2">
+                    <div class="form-field">
+                        <label for="Destino_Viaje">Destino del Viaje</label>
+                        <input type="text" id="Destino_Viaje" name="Destino_Viaje" required>
+                    </div>
                     <div class="form-field">
                         <label for="Tipo_Viaje">Tipo de viaje</label>
                         <select id="Tipo_Viaje" name="Tipo_Viaje">
@@ -165,6 +197,13 @@
                             <option value="Aéreo">Aéreo</option>
                         </select>
                     </div>
+                </div>
+                <div class="form-field">
+                    <label for="Concepto_Viaje">Concepto del Viaje</label>
+                    <textarea id="Concepto_Viaje" name="Concepto_Viaje" rows="3" required></textarea>
+                </div>
+
+                <div class="grid-2">
                     <div class="form-field">
                         <label for="Tipo_Habitacion">Tipo de habitación</label>
                         <select id="Tipo_Habitacion" name="Tipo_Habitacion">
@@ -175,9 +214,6 @@
                             <option value="Privada">Privada</option>
                         </select>
                     </div>
-                </div>
-
-                <div class="grid-2">
                     <div class="form-field">
                         <label for="Punto_Encuentro">Punto de encuentro</label>
                         <select id="Punto_Encuentro" name="Punto_Encuentro">
@@ -191,26 +227,13 @@
                             <option value="Otro">Otro</option>
                         </select>
                     </div>
-                    <div id="otroPuntoField" class="form-field" style="display:none;">
-                        <label for="Otro_Punto">Ingresar otro punto</label>
-                        <input type="text" id="Otro_Punto" name="Otro_Punto">
-                    </div>
+                </div>
+                <div id="otroPuntoField" class="form-field" style="display:none;">
+                    <label for="Otro_Punto">Ingresar otro punto</label>
+                    <input type="text" id="Otro_Punto" name="Otro_Punto">
                 </div>
 
-                <h2 class="text-2xl font-semibold mt-6 mb-4">Conceptos y Pagos</h2>
-
-                <div class="form-field">
-                    <label for="Pago_Realizado_Nuevo">Monto del Primer Pago</label>
-                    <div class="currency-input-wrapper">
-                        <input type="number" id="Pago_Realizado_Nuevo" name="Pago_Realizado_Nuevo" required>
-                    </div>
-                </div>
-
-                <div class="form-field">
-                    <label for="Fecha_Primer_Pago">Fecha del Primer Pago</label>
-                    <input type="date" id="Fecha_Primer_Pago" name="Fecha_Primer_Pago" required>
-                </div>
-
+                <h2 class="section-title">Conceptos y Pagos</h2>
                 <div class="grid-2">
                     <div class="form-field">
                         <label for="Cantidad_Adultos">Adultos</label>
@@ -242,18 +265,35 @@
                     </div>
                 </div>
 
-                <div id="tarifaAdulto" class="form-field hidden">
-                    <label for="Tarifa_Adultos">Tarifa de Adultos</label>
-                    <input type="number" id="Tarifa_Adultos" name="Tarifa_Adultos">
+                <div class="grid-2">
+                    <div id="tarifaAdulto" class="form-field hidden">
+                        <label for="Tarifa_Adultos">Tarifa de Adultos</label>
+                        <div class="currency-input-wrapper">
+                            <input type="number" id="Tarifa_Adultos" name="Tarifa_Adultos">
+                        </div>
+                    </div>
+                    <div id="tarifaMenor" class="form-field hidden">
+                        <label for="Tarifa_Menores">Tarifa de Menores</label>
+                        <div class="currency-input-wrapper">
+                            <input type="number" id="Tarifa_Menores" name="Tarifa_Menores">
+                        </div>
+                    </div>
                 </div>
-                <div id="tarifaMenor" class="form-field hidden">
-                    <label for="Tarifa_Menores">Tarifa de Menores</label>
-                    <input type="number" id="Tarifa_Menores" name="Tarifa_Menores">
+
+                <div class="form-field">
+                    <label for="Pago_Realizado_Nuevo">Monto del Primer Pago</label>
+                    <div class="currency-input-wrapper">
+                        <input type="number" id="Pago_Realizado_Nuevo" name="Pago_Realizado_Nuevo" required>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label for="Fecha_Primer_Pago">Fecha del Primer Pago</label>
+                    <input type="date" id="Fecha_Primer_Pago" name="Fecha_Primer_Pago" required>
                 </div>
 
                 <div class="form-field flex items-center gap-2">
                     <input type="checkbox" id="Tarifa_Adicional_Checkbox" name="Tarifa_Adicional_Checkbox">
-                    <label for="Tarifa_Adicional_Checkbox" class="mb-0">Añadir tarifa adicional</label>
+                    <label for="Tarifa_Adicional_Checkbox" class="mb-0 font-normal">Añadir tarifa adicional</label>
                 </div>
                 <div id="tarifaAdicional" class="form-field hidden">
                     <div class="grid-2">
@@ -273,7 +313,7 @@
 
             <!-- Sección de campos para Actualización de Pago -->
             <div id="actualizacionPagoSection" class="form-section">
-                <h2 class="text-2xl font-semibold mb-4">Actualizar Pago</h2>
+                <h2 class="section-title">Actualizar Pago</h2>
                 <div class="form-field">
                     <label for="Numero_Recibo_Actualizacion">Número de Recibo</label>
                     <input type="text" id="Numero_Recibo_Actualizacion" name="Numero_Recibo_Actualizacion" required>
@@ -367,6 +407,7 @@
 
         window.onload = function() {
             toggleSections();
+            toggleTarifaFields(); // Cargar campos de tarifa al inicio si ya tienen un valor
         }
     </script>
 </body>
