@@ -200,7 +200,7 @@
                             <input type="text" id="Destino_Viaje" name="Destino_Viaje" required>
                         </div>
                         <div class="form-field">
-                            <label for="Tipo_Viaje">Tipo de viaje</label>
+                            <label for="Tipo_Viaje">Tipo de Viaje</label>
                             <select id="Tipo_Viaje" name="Tipo_Viaje">
                                 <option value="Terrestre">Terrestre</option>
                                 <option value="Aéreo">Aéreo</option>
@@ -224,7 +224,7 @@
                             </select>
                         </div>
                         <div class="form-field">
-                            <label for="Punto_Encuentro">Punto de encuentro</label>
+                            <label for="Punto_Encuentro">Punto de salida</label>
                             <select id="Punto_Encuentro" name="Punto_Encuentro">
                                 <option value="Paloma de la Paz">Paloma de La Paz (Morelos)</option>
                                 <option value="Toks Jacarandas">Toks Jacarandas (Morelos)</option>
@@ -237,7 +237,7 @@
                             </select>
                         </div>
                     </div>
-                    <div id="otroPuntoField" class="form-field" style="display:none;">
+                    <div id="otroPuntoField" class="form-field hidden">
                         <label for="Otro_Punto">Ingresar otro punto</label>
                         <input type="text" id="Otro_Punto" name="Otro_Punto">
                     </div>
@@ -273,7 +273,7 @@
                             </select>
                         </div>
                     </div>
-
+                    
                     <div class="grid-2">
                         <div id="tarifaAdulto" class="form-field hidden">
                             <label for="Tarifa_Adultos">Tarifa de Adultos</label>
@@ -362,7 +362,8 @@
         const numeroReciboAct = document.getElementById('Numero_Recibo_Actualizacion');
         const fechaPagoAct = document.getElementById('Fecha_Pago_Actualizacion');
         const montoPagoAct = document.getElementById('Monto_Pago_Actualizacion');
-
+        
+        // Function to toggle between sections
         function toggleSections() {
             formContent.classList.remove('initial-hidden');
             if (nuevoReciboRadio.checked) {
@@ -374,31 +375,7 @@
             }
         }
 
-        nuevoReciboRadio.addEventListener('change', toggleSections);
-        actualizacionRadio.addEventListener('change', toggleSections);
-
-        tarifasAdicionalesCheckbox.addEventListener('change', function() {
-            if (this.checked) {
-                tarifasAdicionales.classList.remove('hidden');
-                conceptoAdicional.setAttribute('required', 'required');
-                montoAdicional.setAttribute('required', 'required');
-            } else {
-                tarifasAdicionales.classList.add('hidden');
-                conceptoAdicional.removeAttribute('required');
-                montoAdicional.removeAttribute('required');
-            }
-        });
-
-        puntoEncuentroSelect.addEventListener('change', function() {
-            if (this.value === 'Otro') {
-                otroPuntoField.style.display = 'block';
-                otroPuntoField.querySelector('input').setAttribute('required', 'required');
-            } else {
-                otroPuntoField.style.display = 'none';
-                otroPuntoField.querySelector('input').removeAttribute('required');
-            }
-        });
-
+        // Function to toggle rate fields
         function toggleTarifaFields() {
             if (parseInt(cantidadAdultos.value) > 0) {
                 tarifaAdulto.classList.remove('hidden');
@@ -413,8 +390,38 @@
             }
         }
 
+        nuevoReciboRadio.addEventListener('change', toggleSections);
+        actualizacionRadio.addEventListener('change', toggleSections);
+        
+        tarifasAdicionalesCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                tarifasAdicionales.classList.remove('hidden');
+                conceptoAdicional.setAttribute('required', 'required');
+                montoAdicional.setAttribute('required', 'required');
+            } else {
+                tarifasAdicionales.classList.add('hidden');
+                conceptoAdicional.removeAttribute('required');
+                montoAdicional.removeAttribute('required');
+            }
+        });
+        
+        puntoEncuentroSelect.addEventListener('change', function() {
+            if (this.value === 'Otro') {
+                otroPuntoField.classList.remove('hidden');
+                otroPuntoField.querySelector('input').setAttribute('required', 'required');
+            } else {
+                otroPuntoField.classList.add('hidden');
+                otroPuntoField.querySelector('input').removeAttribute('required');
+            }
+        });
+
         cantidadAdultos.addEventListener('change', toggleTarifaFields);
         cantidadMenores.addEventListener('change', toggleTarifaFields);
+
+        window.onload = function() {
+            toggleSections();
+            toggleTarifaFields(); 
+        }
     </script>
 </body>
 </html>
